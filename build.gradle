@@ -1,0 +1,85 @@
+group 'org.ksprojects'
+version '1.0-SNAPSHOT'
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
+
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from tasks.javadoc.destinationDir
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+    sign configurations.archives
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(
+                        userName: project.hasProperty('sonatypeUser')
+                                ? project.property('sonatypeUser')
+                                : System.getenv('SONATYPE_USER'),
+                        password: project.hasProperty('sonatypePassword')
+                                ? project.property('sonatypePassword')
+                                : System.getenv('SONATYPE_PASSWORD')
+                )
+            }
+
+            pom.project {
+                name "Java Code Style"
+                packaging 'jar'
+                description 'Java code style and checkstyle rules for Java projects'
+                url 'https://github.com/ksprojects/java-code-style'
+
+                scm {
+                    url 'scm:git@github.com:ksprojects/java-code-style.git'
+                    connection 'scm:git@github.com:ksprojects/java-code-style.git'
+                    developerConnection 'scm:git@github.com:ksprojects/java-code-style.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'kshchepanovskyi'
+                        name 'Kostiantyn Shchepanovskyi'
+                    }
+                }
+            }
+        }
+    }
+}
