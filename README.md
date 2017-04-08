@@ -13,7 +13,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'org.ksprojects:java-code-style:1.1'
+        classpath 'org.ksprojects:java-code-style:1.2'
     }
 }
 
@@ -67,7 +67,7 @@ checkstyle {
                 <dependency>
                     <groupId>org.ksprojects</groupId>
                     <artifactId>java-code-style</artifactId>
-                    <version>1.1</version>
+                    <version>1.2</version>
                 </dependency>
             </dependencies>
         </plugin>
