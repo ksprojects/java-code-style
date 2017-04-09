@@ -74,3 +74,9 @@ checkstyle {
     </plugins>
 </build>
 ```
+
+### Usage Examples
+
+1. [Protobuf Plugin for JetBrains IDEs](https://github.com/protostuff/protobuf-jetbrains-plugin) - gradle.
+2. [Java code and documentation generator for Protobuf](https://github.com/protostuff/protostuff-compiler)- maven.
+3. [ZooKeeper copy utility](https://github.com/ksprojects/zkcopy) - maven.
